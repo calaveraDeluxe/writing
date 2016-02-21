@@ -24,4 +24,26 @@ When calling `$('.child').on('click', someFunction);`, one eventlistener is atta
 ## Delegated mode
 In delegated mode, the listener is bound to parent element (the container) and an additional parameter is passed to indicate which elements we are interesed in. When an event occures inside the container and bubbles up to it, the following happens:
 
+```javascript
+for ( ; cur !== this; cur = cur.parentNode || this ) {
+
+	matches = [];
+	for ( i = 0; i < delegateCount; i++ ) {
+		handleObj = handlers[ i ]; // #1
+
+		sel = handleObj.selector;
+
+		if ( matches[ sel ] === undefined ) {
+			matches[ sel ] = jQuery.find( sel, this, null, [ cur ] ).length; // #2
+		}
+		if ( matches[ sel ] ) {
+			matches.push( handleObj );
+		}
+	}
+	if ( matches.length ) {
+		handlerQueue.push( { elem: cur, handlers: matches } ); // #3
+	}
+}
+```
+
 jQuery tests every element between the event.target (the element the event originally occured on) and the container (but not the container itself). If the tested element matches the given selector, the handler bound to the container is executed, but with the current element as the target (making it appear as if the event occured at the element, not the container).
