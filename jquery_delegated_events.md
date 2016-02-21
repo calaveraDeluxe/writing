@@ -22,6 +22,6 @@ When calling `$('.child').on('click', someFunction);`, one eventlistener is atta
 * When adding elements later via javascript, the handlers need to be bound to these elements too
 
 ## Delegated mode
-In delegated mode, the listener is bound to parent element and an additional parameter is passed to indicate which element we are interesed in. When an event occures inside the container and bubbles up to it, the following happens:
+In delegated mode, the listener is bound to parent element (the container) and an additional parameter is passed to indicate which elements we are interesed in. When an event occures inside the container and bubbles up to it, the following happens:
 
-jQuery 
+jQuery tests every element between the event.target (the element the event originally occured on) and the container (but not the container itself). If the tested element matches the given selector, the handler bound to the container is executed, but with the current element as the target (making it appear as if the event occured at the element, not the container).
