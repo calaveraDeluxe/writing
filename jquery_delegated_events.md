@@ -48,7 +48,7 @@ for ( ; cur !== this; cur = cur.parentNode || this ) { // #1
 
 Lets disect it:
 
-1. `cur` is set to `event.target` ([a few lines above this](https://github.com/jquery/jquery/blob/1de834672959636da8c06263c3530226b17a84c3/src/event.js#L348)), the element that the event occured on initially. Every iteration `cur` is set to its own parent element, thereby travelling up the dom. The loop ends when it reaches the container.
+1. initially, `cur` is set to `event.target` ([a few lines above this](https://github.com/jquery/jquery/blob/1de834672959636da8c06263c3530226b17a84c3/src/event.js#L348)), the element that the event occured on initially. Every iteration `cur` is set to its own parent element, thereby travelling up the dom. The loop ends when it reaches the container.
 
 
 jQuery tests every element between the event.target (the element the event originally occured on) and the container (but not the container itself). If the tested element matches the given selector, the handler bound to the container is executed, but with the current element as the target (making it appear as if the event occured at the element, not the container).
