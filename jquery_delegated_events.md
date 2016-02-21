@@ -22,7 +22,7 @@ When calling `$('.child').on('click', someFunction);`, one eventlistener is atta
 * When adding elements later via javascript, the handlers need to be bound to these elements too
 
 ## Delegated mode
-In delegated mode, the listener is bound to parent element (the container) and an additional parameter is passed to indicate which elements we are interesed in. When an event occures inside the container and bubbles up to it, the following happens:
+In delegated mode, the listener is bound to parent element (the container) and an additional parameter is passed to indicate which elements we are interesed in. When an event occures inside the container and bubbles up to it, the following code is executed (abbreviated a bit, full source is at [event.js](https://github.com/jquery/jquery/blob/1de834672959636da8c06263c3530226b17a84c3/src/event.js#L359)):
 
 ```javascript
 for ( ; cur !== this; cur = cur.parentNode || this ) {
@@ -30,9 +30,9 @@ for ( ; cur !== this; cur = cur.parentNode || this ) {
 	matches = [];
 	for ( i = 0; i < delegateCount; i++ ) {
 		handleObj = handlers[ i ]; // #1
-
+	
 		sel = handleObj.selector;
-
+	
 		if ( matches[ sel ] === undefined ) {
 			matches[ sel ] = jQuery.find( sel, this, null, [ cur ] ).length; // #2
 		}
