@@ -25,25 +25,30 @@ When calling `$('.child').on('click', someFunction);`, one eventlistener is atta
 In delegated mode, the listener is bound to parent element (the container) and an additional parameter is passed to indicate which elements we are interesed in. When an event occures inside the container and bubbles up to it, the following code is executed (abbreviated a bit, full source is at [event.js](https://github.com/jquery/jquery/blob/1de834672959636da8c06263c3530226b17a84c3/src/event.js#L359)):
 
 ```javascript
-for ( ; cur !== this; cur = cur.parentNode || this ) {
+for ( ; cur !== this; cur = cur.parentNode || this ) { // #1
 
 	matches = [];
-	for ( i = 0; i < delegateCount; i++ ) {
-		handleObj = handlers[ i ]; // #1
+	for ( i = 0; i < delegateCount; i++ ) { // #2
+		handleObj = handlers[ i ]; // #3
 	
 		sel = handleObj.selector;
 	
 		if ( matches[ sel ] === undefined ) {
-			matches[ sel ] = jQuery.find( sel, this, null, [ cur ] ).length; // #2
+			matches[ sel ] = jQuery.find( sel, this, null, [ cur ] ).length; // #4
 		}
 		if ( matches[ sel ] ) {
-			matches.push( handleObj );
+			matches.push( handleObj ); // #5
 		}
 	}
 	if ( matches.length ) {
-		handlerQueue.push( { elem: cur, handlers: matches } ); // #3
+		handlerQueue.push( { elem: cur, handlers: matches } ); // #6
 	}
 }
 ```
+
+Lets disect it:
+
+# `cur` is set to `event.target` ([a few lines above this](https://github.com/jquery/jquery/blob/1de834672959636da8c06263c3530226b17a84c3/src/event.js#L348)), the element that the event occured on initially. Every iteration `cur` is set to its own parent element, thereby travelling up the dom. The loop ends when it reaches the container.
+
 
 jQuery tests every element between the event.target (the element the event originally occured on) and the container (but not the container itself). If the tested element matches the given selector, the handler bound to the container is executed, but with the current element as the target (making it appear as if the event occured at the element, not the container).
